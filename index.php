@@ -30,7 +30,7 @@
 				<div class="col-sm-12">
 				
 					<h4 class="text-center">An Easy Way to Make Tile Video Screenshot With Ajax</h4>
-					<h4 class="text-danger">By Pedram - Amoo Pedram</h4>
+					<h4 class="text-danger text-center">By Pedram - Amoo Pedram</h4>
 					
 					<hr/>
 					
