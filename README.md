@@ -16,3 +16,9 @@ Remember : To Run This Script Your Server Most Installed latest FFmpeg Version.
 
 For Profession Version :
 Email To Me: Pedroxam@gmail.com
+
+
+
+Tags:
+
+FFmpeg Video Thumbnail,Tile FFmpeg Video Thumbnail, Video Screenshot, Make Video Screenshot, How To Make Video Screenshot By FFmpeg ?
