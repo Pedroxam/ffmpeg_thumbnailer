@@ -4,7 +4,7 @@
 * By Pedram Asbaghi
 /*=====================*/
 
-error_reporting(E_ALL);
+require 'config.php';
 
 if(isset($_POST['video']) && !empty($_POST['video'])) {
 	
@@ -15,7 +15,8 @@ if(isset($_POST['video']) && !empty($_POST['video'])) {
 	if (substr(php_uname(), 0, 7) == "Windows")
 	{
 		 //windows
-		$ffmpeg_path  = dirname(__FILE__) . '/ffmpeg.exe';
+		// $ffmpeg_path  = BASE . '/ffmpeg.exe';
+		$ffmpeg_path  = 'ffmpeg';
 	}
 	else {
 		 //linux or others ( if the conversion operation did not work, edit this path )
@@ -27,8 +28,11 @@ if(isset($_POST['video']) && !empty($_POST['video'])) {
 	//Get Video File
 	$inputVideo = trim( $_POST['video'] );
 	
-	//Set Output Image directory with name
-	$newName = './store/' . rand() . '.jpg';
+	//Set Output Image name
+	$newName = STORAGE . basename($inputVideo) . rand() . '.jpg';
+	
+	//Set Output Image path
+	$output = BASE . $newName;
 	
 	//Set Tile Mode
 	$tile_1 = trim($_POST['tile_1']);
@@ -48,19 +52,20 @@ if(isset($_POST['video']) && !empty($_POST['video'])) {
 	
 	$size = $size_1 . 'x' . $size_2;
 	
-	//Set Make Capture Every Below Time (4 seconds)
+	//Make Capture Every Below Time (4 seconds)
 	$time = '00:00:04';
 	
 	//Generate FFmpeg Command
-	$command = "$ffmpeg_path -ss $time -i $inputVideo -vf select=not(mod(n\,1000)),scale=$size,tile=$tile $newName";
+	$command = "$ffmpeg_path -ss $time -i $inputVideo -vf select=not(mod(n\,1000)),scale=$size,tile=$tile $output";
 	
 	//Excute FFmpeg Command
 	$exec = shell_exec($command);
 	
+	//Show FFmpeg Log
 	// var_dump($exec);
 	
 	//Response
-    exit(json_encode(['status' => true, 'image' => $newName]));
+    exit(json_encode(['status' => true, 'image' => URI . $newName]));
 }
 
-else exit(json_encode(['status' => 'Nothing Found Posted Video !']));
+else exit(json_encode(['status' => 'What\'s Up My Firend ?']));
