@@ -4,12 +4,9 @@
 * By Pedram Asbaghi
 /*=====================*/
 
-$rootPath =  dirname(__FILE__);
+require 'config.php';
 
-// Set Store Folder
-$storeName = '/store/';
-
-$store = $rootPath  . $storeName;
+$store = dirname(__FILE__)  . STORAGE;
 
 // Set Allowed Videos format
 $allowFormats = array( 'mp4', 'mkv', '3gp' );
@@ -65,7 +62,7 @@ try {
 		}
 	}
 	
-    exit(json_encode(['status' => true, 'file' => '.' . $storeName . $filepath]));
+    exit(json_encode(['status' => true, 'file' => '.' . STORAGE . $filepath]));
 
 } catch (RuntimeException $e) {
 	http_response_code(400);
