@@ -61,6 +61,11 @@ if(isset($_POST['video']) && !empty($_POST['video'])) {
 	//Excute FFmpeg Command
 	shell_exec($command);
 	
+	// ensure the output file is ready
+        if(!file_exist($output)) {
+		sleep(2);
+	}
+	
    //Response
     exit(json_encode(['status' => true, 'image' => URI . $newName]));
 }
