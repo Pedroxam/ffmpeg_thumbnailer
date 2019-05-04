@@ -59,12 +59,9 @@ if(isset($_POST['video']) && !empty($_POST['video'])) {
 	$command = "$ffmpeg_path -ss $time -i $inputVideo -vf select=not(mod(n\,1000)),scale=$size,tile=$tile $output";
 	
 	//Excute FFmpeg Command
-	$exec = shell_exec($command);
+	shell_exec($command);
 	
-	//Show FFmpeg Log
-	// var_dump($exec);
-	
-	//Response
+   //Response
     exit(json_encode(['status' => true, 'image' => URI . $newName]));
 }
 
