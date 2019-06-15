@@ -20,7 +20,7 @@ if(isset($_POST['video']) && !empty($_POST['video'])) {
 	}
 	else {
 		 //linux or others ( if the conversion operation did not work, edit this path )
-		$ffmpeg_path  = '/usr/bin/ffmpeg';
+		$ffmpeg_path  = 'ffmpeg';
 	}
 	
 	//========== Next Step =========>
@@ -62,7 +62,7 @@ if(isset($_POST['video']) && !empty($_POST['video'])) {
 	shell_exec($command);
 	
 	// ensure the output file is ready
-        if(!file_exist($output)) {
+        if(!file_exists($output)) {
 		sleep(2);
 	}
 	
