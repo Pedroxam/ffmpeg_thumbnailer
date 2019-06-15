@@ -1,73 +1,71 @@
 <?php
 /*=====================
-* FFmpeg Tile Thumbnailer
+* File Upload Handler
 * By Pedram Asbaghi
 /*=====================*/
 
 require 'config.php';
 
-if(isset($_POST['video']) && !empty($_POST['video'])) {
-	
-	//Set 0 Limit Time
-	set_time_limit(0);
+$store = dirname(__FILE__)  . STORAGE;
 
-	//Set FFmpeg installation Path
-	if (substr(php_uname(), 0, 7) == "Windows")
-	{
-		 //windows
-		// $ffmpeg_path  = BASE . '/ffmpeg.exe';
-		$ffmpeg_path  = 'ffmpeg';
-	}
-	else {
-		 //linux or others ( if the conversion operation did not work, edit this path )
-		$ffmpeg_path  = '/usr/bin/ffmpeg';
-	}
-	
-	//========== Next Step =========>
-	
-	//Get Video File
-	$inputVideo = trim( $_POST['video'] );
-	
-	//Set Output Image name
-	$newName = STORAGE . basename($inputVideo) . rand() . '.jpg';
-	
-	//Set Output Image path
-	$output = BASE . $newName;
-	
-	//Set Tile Mode
-	$tile_1 = trim($_POST['tile_1']);
-	$tile_1 = intval($tile_1);
-	
-	$tile_2 = trim($_POST['tile_2']);
-	$tile_2 = intval($tile_2);
-	
-	$tile = $tile_1 . 'x' . $tile_2;
-	
-	//Set Each Thumb Size
-	$size_1 = trim($_POST['size_1']);
-	$size_1 = intval($size_1);
-	
-	$size_2 = trim($_POST['size_2']);
-	$size_2 = intval($size_2);
-	
-	$size = $size_1 . 'x' . $size_2;
-	
-	//Make Capture Every Below Time (4 seconds)
-	$time = '00:00:04';
-	
-	//Generate FFmpeg Command
-	$command = "$ffmpeg_path -ss $time -i $inputVideo -vf select=not(mod(n\,1000)),scale=$size,tile=$tile $output";
-	
-	//Excute FFmpeg Command
-	shell_exec($command);
-	
-	// ensure the output file is ready
-        if(!file_exists($output)) {
-		sleep(2);
-	}
-	
-   //Response
-    exit(json_encode(['status' => true, 'image' => URI . $newName]));
+// Set Allowed Videos format
+$allowFormats = array( 'mp4', 'mkv', '3gp' );
+
+// check exists folder
+if(!file_exists($store)) {
+	@mkdir($store);
+	@chmod($store, 0777) ;
 }
 
-else exit(json_encode(['status' => 'What\'s Up My Firend ?']));
+// no time limit
+set_time_limit(0);
+
+// json header
+header('Content-type:application/json;charset=utf-8');
+
+try {
+    if (
+        !isset($_FILES['file']['error']) ||
+        is_array($_FILES['file']['error'])
+    ) {
+        throw new RuntimeException('Invalid parameters.');
+    }
+
+    switch ($_FILES['file']['error']) {
+        case UPLOAD_ERR_OK:
+            break;
+        case UPLOAD_ERR_NO_FILE:
+            throw new RuntimeException('No file sent.');
+        case UPLOAD_ERR_INI_SIZE:
+        case UPLOAD_ERR_FORM_SIZE:
+            throw new RuntimeException('Exceeded filesize limit.');
+        default:
+            throw new RuntimeException('Unknown errors.');
+    }
+
+    $filepath = sprintf('%s_%s', uniqid(), $_FILES['file']['name']);
+	
+	// check extension
+	$temp = explode(".", $_FILES["file"]["name"]);
+	$extension = end($temp);
+	
+	if(!in_array($extension, $allowFormats))
+	{
+		exit(json_encode(['status' => 'Not Allowed To Upload This File !']));
+	}
+	else {
+		if (!move_uploaded_file(
+			$_FILES['file']['tmp_name'],
+			$store . $filepath
+		)) {
+			throw new RuntimeException('Failed to move uploaded file.');
+		}
+	}
+	
+    exit(json_encode(['status' => true, 'file' => '.' . STORAGE . $filepath]));
+
+} catch (RuntimeException $e) {
+	http_response_code(400);
+
+    exit(json_encode(['status' => $e->getMessage()]));
+}
