@@ -1,7 +1,6 @@
 <?php
 /*=====================
 * FFmpeg Tile Thumbnailer
-* By Pedram Asbaghi
 /*=====================*/
 
 require 'config.php';
@@ -70,4 +69,4 @@ if(isset($_POST['video']) && !empty($_POST['video'])) {
     exit(json_encode(['status' => true, 'image' => URI . $newName]));
 }
 
-else exit(json_encode(['status' => 'What\'s Up My Firend ?']));
+else exit(json_encode(['status' => 'NOT']));
