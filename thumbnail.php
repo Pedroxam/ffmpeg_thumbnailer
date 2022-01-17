@@ -19,7 +19,7 @@ if(isset($_POST['video']) && !empty($_POST['video'])) {
 	}
 	else {
 		 //linux or others ( if the conversion operation did not work, edit this path )
-		$ffmpeg_path  = 'ffmpeg';
+		$ffmpeg_path  = 'bin/ffmpeg';
 	}
 	
 	//========== Next Step =========>
@@ -51,7 +51,7 @@ if(isset($_POST['video']) && !empty($_POST['video'])) {
 	
 	$size = $size_1 . 'x' . $size_2;
 	
-	//Make Capture Every Below Time (4 seconds)
+	//Make Capture Every Below Time (default is 4 seconds)
 	$time = '00:00:04';
 	
 	//Generate FFmpeg Command
